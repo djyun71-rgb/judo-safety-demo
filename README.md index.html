@@ -25,7 +25,7 @@
         .action-btn { background: #ff3b30; color: #fff; width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; display: none; cursor: pointer; text-align: center; margin-top: 10px; }
         
         /* 하단 바 */
-        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e5e5e7; padding: 16px; display: flex; gap: 12px; justify-content: center; z-index: 100; }
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e5e5e7; padding: 16px; display: flex; gap: 12px; justify-content: center; z-index: 100; display: none; }
         .bottom-btn { flex: 1; max-width: 240px; padding: 16px; border-radius: 8px; font-weight: bold; text-align: center; font-size: 14px; cursor: pointer; border: none; }
         .btn-prev { background: #fff; border: 1px solid #d2d2d7; color: #007aff; }
         .btn-next { background: #007aff; color: #fff; }
@@ -62,7 +62,7 @@
     <!-- 1화면: 기본 정보 설정 마스터 뷰 -->
     <div id="formView" class="container">
         <div class="card">
-            <div class="card-title">🥋 대회 기본 설정 등록</div>
+            <div class="card-title">FileType_🥋 대회 기본 설정 및 기상 등록</div>
             <div class="form-group">
                 <label>대회명</label>
                 <input type="text" id="txtCompName" value="제1회 강원도지사배 유도대회">
@@ -92,7 +92,7 @@
                     <input type="number" id="txtParticipants" value="500">
                 </div>
                 <div style="flex: 1;">
-                    <label>안전 안전 책임자</label>
+                    <label>안전 책임자</label>
                     <input type="text" id="txtInspector" value="홍길동">
                 </div>
             </div>
@@ -154,6 +154,6 @@
             </div>
 
         </div>
-        
-        <!-- 하단 액션 네비게이션 가이드 바 -->
-        <div class="bottom-bar">
+    </div>
+
+    <!-- 하단 액션 네비게이션 가이드 바 -->
