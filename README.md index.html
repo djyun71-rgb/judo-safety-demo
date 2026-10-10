@@ -8,53 +8,35 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f7; margin: 0; padding: 0; -webkit-user-select: none; color: #1d1d1f; }
         .app-bar { background: #fff; padding: 16px; font-weight: bold; border-bottom: 1px solid #e5e5e7; position: sticky; top: 0; font-size: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); z-index: 100; }
         .container { padding: 16px; padding-bottom: 140px; max-width: 500px; margin: 0 auto; }
-        
-        /* 카드 디자인 */
         .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 16px; }
         .card-title { font-size: 16px; font-weight: bold; margin-bottom: 16px; color: #007aff; border-bottom: 2px solid #007aff; padding-bottom: 6px; }
-        
-        /* 폼 요소 스타일 */
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; font-size: 12px; font-weight: bold; color: #515154; margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #d2d2d7; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #fff; font-family: inherit; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #007aff; outline: none; }
-        
-        /* 버튼 공통 */
-        .primary-btn { background: #007aff; color: #fff; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,122,255,0.15); }
+        .primary-btn { background: #007aff; color: #fff; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
         .danger-btn { background: #ef5350; color: #fff; width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
         .action-btn { background: #ff3b30; color: #fff; width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; display: none; cursor: pointer; text-align: center; margin-top: 10px; }
-        
-        /* 하단 바 */
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e5e5e7; padding: 16px; display: flex; gap: 12px; justify-content: center; z-index: 100; display: none; }
         .bottom-btn { flex: 1; max-width: 240px; padding: 16px; border-radius: 8px; font-weight: bold; text-align: center; font-size: 14px; cursor: pointer; border: none; }
         .btn-prev { background: #fff; border: 1px solid #d2d2d7; color: #007aff; }
         .btn-next { background: #007aff; color: #fff; }
-
-        /* 화면 제어 */
         #inspectionView { display: none; }
         .progress-container { background: #fff; padding: 14px; border-radius: 10px; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .progress-bar { background: #e5e5e7; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 6px; }
-        .progress-fill { background: #007aff; width: 8.3%; height: 100%; transition: width 0.3s ease; }
-        
+        .progress-fill { background: #007aff; width: 8.3%; height: 100%; }
         .category { color: #007aff; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 2px; }
         .item-title { font-size: 17px; font-weight: bold; margin: 6px 0; color: #1d1d1f; }
         .guide { color: #515154; font-size: 13px; line-height: 1.5; margin-bottom: 16px; background: #f5f5f7; padding: 12px; border-radius: 8px; border-left: 4px solid #007aff; }
-        
-        /* 삼단 분할 판정 버튼 */
         .btn-group { display: flex; gap: 8px; margin: 16px 0; }
-        .status-btn { flex: 1; padding: 14px 0; border-radius: 8px; border: 2px solid #e5e5e7; background: #fff; font-weight: bold; text-align: center; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+        .status-btn { flex: 1; padding: 14px 0; border-radius: 8px; border: 2px solid #e5e5e7; background: #fff; font-weight: bold; text-align: center; cursor: pointer; font-size: 13px; }
         .status-btn.pass-active { background: #2ecc71 !important; color: #fff !important; border-color: #2ecc71 !important; }
         .status-btn.warn-active { background: #f1c40f !important; color: #fff !important; border-color: #f1c40f !important; }
         .status-btn.fail-active { background: #ff3b30 !important; color: #fff !important; border-color: #ff3b30 !important; }
-        
         .contact-box { background: #f5f5f7; border: 1px solid #e5e5e7; padding: 12px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; }
-        
-        /* 실시간 사건 사고 상황판 */
         .badge { display: inline-block; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 6px; }
         .bg-patient { background: #ffeaa7; color: #d63031; }
         .bg-accident { background: #ff7675; color: #fff; }
         .log-item { border-bottom: 1px dashed #e5e5e7; padding: 8px 0; font-size: 13px; line-height: 1.4; }
-        .log-item:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
@@ -62,7 +44,7 @@
     <!-- 1화면: 기본 정보 설정 마스터 뷰 -->
     <div id="formView" class="container">
         <div class="card">
-            <div class="card-title">FileType_🥋 대회 기본 설정 및 기상 등록</div>
+            <div class="card-title">🥋 대회 정보 및 기상 등록</div>
             <div class="form-group">
                 <label>대회명</label>
                 <input type="text" id="txtCompName" value="제1회 강원도지사배 유도대회">
@@ -100,15 +82,13 @@
         </div>
     </div>
 
-    <!-- 2화면: 현장 점검 가동 및 사고 상황실 결합 스마트 대시보드 뷰 -->
+    <!-- 2화면: 현장 점검 및 사고 상황실 결합 스마트 대시보드 뷰 -->
     <div id="inspectionView">
         <div class="app-bar" id="appBarTitle">📱 경기장 실시간 점검 레포트</div>
         <div class="container">
-            
-            <!-- A. 실시간 안전 지표 점검 모듈 -->
             <div class="progress-container">
                 <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: bold;">
-                    <span id="sessionTitle">점검 진행률</span>
+                    <span>점검 진행률</span>
                     <span id="progressText" style="color: #007aff;">1 / 12 항목 진행 중</span>
                 </div>
                 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
@@ -129,11 +109,10 @@
                     <div style="font-size: 11px; color: #86868b; font-weight: bold; margin-bottom: 4px;">📋 소관 부서 및 비상 연락처</div>
                     <div id="lblContact" style="font-weight: bold; color: #333;">담당자 정보</div>
                 </div>
-                
                 <button class="action-btn" id="sendBtn" onclick="triggerAlert()">⚡ 즉시 개선 요청 발송</button>
             </div>
 
-            <!-- B. 현장 점검 중 상시 개방되는 사고/환자 입력 상황판 -->
+            <!-- 현장 점검 중 상시 개방되는 사고/환자 입력 상황판 -->
             <div class="card" style="border: 2px solid #ef5350;">
                 <div class="card-title" style="color: #ef5350; border-bottom-color: #ef5350;">🚨 점검 중 환자 및 사고 발생 실시간 기록</div>
                 <div class="form-group" style="display: flex; gap: 8px;">
@@ -144,7 +123,6 @@
                     <input type="text" id="incidentDetail" style="flex: 2; padding: 8px;" placeholder="예: 남고부 어깨 탈구 발생 의무대 이송">
                     <button class="danger-btn" style="flex: 1; padding: 8px 0;" onclick="saveIncident()">등록</button>
                 </div>
-                
                 <div style="margin-top: 14px;">
                     <div style="font-size: 12px; font-weight: bold; color: #515154; margin-bottom: 6px;">📋 오늘 기록된 사고/환자 종합 대장</div>
                     <div id="incidentLogBox" style="background: #f5f5f7; border: 1px solid #e5e5e7; padding: 10px; border-radius: 8px; min-height: 40px; max-height: 150px; overflow-y: auto;">
@@ -152,8 +130,14 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- 하단 액션 네비게이션 가이드 바 -->
+    <div class="bottom-bar" id="navigationBottomBar">
+        <button class="bottom-btn btn-prev" onclick="moveStep(-1)">⬅️ 이전 화면</button>
+        <button class="bottom-btn btn-next" onclick="moveStep(1)" id="nextBtn">다음 항목 ➡️</button>
+    </div>
+
+    <script>
+        const inspectionItems = [
+            { id: 0, cat: "A. 매트(Tatami) 및 바닥 상태", code: "A-1", title: "매트 밀착도 및 틈새 점검", guide: "매트 사이 틈새가 5mm 이상 벌어져 선수 디딤발이나 발가락이 끼일 위험이 없는지 정밀하게 확인하십시오.", contact: "시설 관리팀 - 김관리 (010-1234-5678)" },
