@@ -1,1 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>유도 경기장 안전점검 시스템</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f7; margin: 0; padding: 0; -webkit-user-select: none; color: #1d1d1f; }
+        .app-bar { background: #fff; padding: 16px; font-weight: bold; border-bottom: 1px solid #e5e5e7; position: sticky; top: 0; font-size: 16px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); z-index: 100; }
+        .container { padding: 16px; padding-bottom: 120px; max-width: 500px; margin: 0 auto; }
+        .progress-container { background: #fff; padding: 16px; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .progress-bar { background: #e5e5e7; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+        .progress-fill { background: #007aff; width: 8.3%; height: 100%; transition: width 0.3s ease; }
+        .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 16px; }
+        .category { color: #007aff; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+        .item-title { font-size: 18px; font-weight: bold; margin: 8px 0; color: #1d1d1f; }
+        .guide { color: #515154; font-size: 14px; line-height: 1.5; margin-bottom: 20px; background: #f5f5f7; padding: 12px; border-radius: 8px; border-left: 4px solid #007aff; }
+        .btn-group { display: flex; gap: 8px; margin: 20px 0; }
+        .status-btn { flex: 1; padding: 14px 0; border-radius: 8px; border: 2px solid #e5e5e7; background: #fff; font-weight: bold; text-align: center; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .status-btn.pass.active { background: #2ecc71; color: #fff; border-color: #2ecc71; }
+        .status-btn.warn.active { background: #f1c40f; color: #fff; border-color: #f1c40f; }
+        .status-btn.fail.active { background: #ff3b30; color: #fff; border-color: #ff3b30; }
+        .contact-box { background: #f5f5f7; border: 1px solid #e5e5e7; padding: 12px; border-radius: 8px; font-size: 13px; margin-bottom: 20px; }
+        .contact-title { font-size: 11px; color: #86868b; font-weight: bold; margin-bottom: 4px; }
+        .action-btn { background: #ff3b30; color: #fff; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; display: none; cursor: pointer; text-align: center; box-shadow: 0 4px 12px rgba(255,59,48,0.2); margin-top: 10px; }
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e5e5e7; padding: 16px; display: flex; gap: 12px; justify-content: center; z-index: 100; }
+        .bottom-btn { flex: 1; max-width: 240px; padding: 16px; border-radius: 8px; font-weight: bold; text-align: center; font-size: 14px; cursor: pointer; border: none; }
+        .btn-prev { background: #fff; border: 1px solid #d2d2d7; color: #007aff; }
+        .btn-next { background: #007aff; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="app-bar">📱 경기장 실시간 점검 레포트</div>
+    <div class="container">
+        <div class="progress-container">
+            <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: bold;">
+                <span id="sessionTitle">점검 진행률</span>
+                <span id="progressText" style="color: #007aff;">1/12 항목 완료</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        
+        <div class="card">
+            <div class="category" id="lblCategory">A. 매트(Tatami) 및 바닥 상태</div>
+            <div class="item-title" id="lblTitle">A-1. 매트 밀착도 및 틈새 점검</div>
+            <div class="guide" id="lblGuide">가이드 내용이 들어갑니다.</div>
+            
+            <div class="btn-group">
+                <div class="status-btn pass" id="btnPass" onclick="setJudgment('패스')">🟢 패스</div>
+                <div class="status-btn warn" id="btnWarn" onclick="setJudgment('요주의')">🟡 요주의</div>
+                <div class="status-btn fail" id="btnFail" onclick="setJudgment('불합격')">🔴 불합격</div>
+            </div>
 
+            <div class="contact-box">
+                <div class="contact-title">📋 소관 부서 및 비상 연락처</div>
+                <div id="lblContact" style="font-weight: bold; color: #333;">담당자 정보</div>
+            </div>
+            
+            <button class="action-btn" id="sendBtn" onclick="triggerAlert()">⚡ 즉시 개선 요청 발송</button>
+        </div>
+    </div>
+    
+    <div class="bottom-bar">
+        <button class="bottom-btn btn-prev" onclick="moveStep(-1)">⬅️ 이전 항목</button>
+        <button class="bottom-btn btn-next" onclick="moveStep(1)" id="nextBtn">다음 항목 ➡️</button>
+    </div>
+
+    <script>
+        // 12개 마스터 세부 지표 데이터 구조 선언
+        const inspectionItems = [
+            { id: 0, cat: "A. 매트(Tatami) 및 바닥 상태", code: "A-1", title: "매트 밀착도 및 틈새 점검", guide: "매트 사이 틈새가 5mm 이상 벌어져 선수 디딤발이나 발가락이 끼일 위험이 없는지 정밀하게 확인하십시오.", contact: "시설 관리팀 - 김관리 (010-1234-5678)" },
+            { id: 1, cat: "A. 매트(Tatami) 및 바닥 상태", code: "A-2", title: "매트 표면 마찰력 및 오염도", guide: "표면이 땀이나 마모로 인해 미끄럽지 않은지, 혈흔이나 이물질 없이 위생적으로 소독 청소되었는지 점검하십시오.", contact: "시설 관리팀 - 김관리 (010-1234-5678)" },
+            { id: 2, cat: "A. 매트(Tatami) 및 바닥 상태", code: "A-3", title: "매트 하부 프레임 고정 상태", guide: "선수들이 격렬하게 메치기를 진행할 때 매트 전체가 밀리거나 판이 무너지지 않도록 고정 앵커가 밀착되었는지 확인하십시오.", contact: "용품 공급사A - 기술지원 (02-123-4567)" },
+            { id: 3, cat: "A. 매트(Tatami) 및 바닥 상태", code: "A-4", title: "매트 탄성도 및 함몰 여부", guide: "특정 구역이 과도하게 꺼지거나 딱딱해져 낙법 시 충격 흡수 능력이 상실되지 않았는지 디딤 테스트를 실시하십시오.", contact: "용품 공급사A - 기술지원 (02-123-4567)" },
+            { id: 4, cat: "B. 경기 구역 및 안전 구역 규격", code: "B-1", title: "경기 구역(Fight Area) 정격 크기", guide: "공인 규격인 최소 8x8m에서 최대 10x10m 규격을 충족하는지 실측 테이핑 라인을 계측하십시오.", contact: "대회 운영본부 - 경기부 (010-9876-5432)" },
+            { id: 5, cat: "B. 경기 구역 및 안전 구역 규격", code: "B-2", title: "안전 구역(Safety Zone) 마진 너비", guide: "경기 구역 경계선 밖으로 최소 2m(전국대회급 이상 3m) 유격 안전 마진 공간이 명확하게 보장되는지 확인하십시오.", contact: "대회 운영본부 - 경기부 (010-9876-5432)" },
+            { id: 6, cat: "B. 경기 구역 및 안전 구역 규격", code: "B-3", title: "구역 경계선 테이프 시인성", guide: "선수와 심판이 명확하게 아웃 판정을 내릴 수 있도록 청색과 적색 등 매트 색상 보색 대비가 뚜렷한지 확인하십시오.", contact: "대회 운영본부 - 경기부 (010-9876-5432)" },
+            { id: 7, cat: "B. 경기 구역 및 안전 구역 규격", code: "B-4", title: "안전 구역 내 적치물 유무", guide: "경기 구역 바깥 안전지대에 카메라 삼각대, 중계 전선, 계시판 화분 등 충돌 위험 요소가 방치되어 있는지 즉시 제거하십시오.", contact: "대회 운영본부 - 경기부 (010-9876-5432)" },
+            { id: 8, cat: "C. 주변 시설 및 환경 안전 대책", code: "C-1", title: "벽면 및 기둥 충격보호대 상태", guide: "경기장 가장자리에 위치한 체육관 콘크리트 벽면 및 기둥 부위에 높이 1.8m 이상의 충격 흡수 매트 패딩이 견고히 감싸져 있는지 확인하십시오.", contact: "체육관 대관담당 - 시설계 (033-123-4567)" },
+            { id: 9, cat: "C. 주변 시설 및 환경 안전 대책", code: "C-2", title: "선수 및 관중 동선 차단펜스", guide: "흥분한 관중이나 외부인이 선수 대기 구역 및 매트에 난입하지 못하도록 안전 차단 펜스 및 안전 요원이 정위치에 배치되었는지 확인하십시오.", contact: "대회 운영본부 - 안전관제 (010-1111-2222)" },
+            { id: 10, cat: "C. 주변 시설 및 환경 안전 대책", code: "C-3", title: "조명 균일도 및 환기 성능", guide: "선수의 순간 시야를 방해하는 상부 직접 투광 조명의 눈부심(글레어) 현상이 없는지 및 실내 탁도를 쾌적하게 유지하는지 확인하십시오.", contact: "체육관 대관담당 - 전기계 (033-123-4568)" },
+            { id: 11, cat: "C. 주변 시설 및 환경 안전 대책", code: "C-4", title: "응급 구역 및 앰뷸런스 동선", guide: "부상자 발생 시 즉각 응급 처치가 가능한 의료진 부스 및 구급차가 장애물 없이 외부 도로로 출동할 수 있는 탈출로가 확보되었는지 확인하십시오.", contact: "현장 의료 지원팀 - 구급반 (010-5555-6666)" }
+        ];
+
+        let currentStep = 0;
+        let judgments = Array(12).fill(null); // 각 항목 판정 기록 저장용 배열
+
+        // 화면 갱신 렌더러 함수
+        function renderStep() {
+            const item = inspectionItems[currentStep];
+            document.getElementById('lblCategory').innerText = item.cat;
+            document.getElementById('lblTitle').innerText = `${item.code}. ${item.title}`;
+            document.getElementById('lblGuide').innerText = item.guide;
+            document.getElementById('lblContact').innerText = item.contact;
+            
+            // 진행률 및 인디케이터 업데이트
+            const progressPercent = ((currentStep + 1) / 12) * 100;
+            document.getElementById('progressFill').style.width = `${progressPercent}%`;
+            document.getElementById('progressText').innerText = `${currentStep + 1} / 12 항목 진행 중`;
+
+            // 이전 판정 버튼 스타일 초기화 및 복원
+            document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
+            const currentJudgment = judgments[currentStep];
+            if(currentJudgment === '패스') document.getElementById('btnPass').add('active');
+            if(currentJudgment === '요주의') document.getElementById('btnWarn').add('active');
+            if(currentJudgment === '불합격') {
+                document.getElementById('btnFail').classList.add('active');
+                document.getElementById('sendBtn').style.display = 'block';
+            } else {
+                document.getElementById('sendBtn').style.display = 'none';
+            }
+
+            // 하단 버튼 텍스트 제어 (마지막 문항 처리)
+            if(currentStep === 11) {
+                document.getElementById('nextBtn').innerText = "🥇 전체 점검 완료하기";
+                document.getElementById('nextBtn').style.backgroundColor = "#2ecc71";
+            } else {
+                document.getElementById('nextBtn').innerText = "다음 항목 ➡️";
+                document.getElementById('nextBtn').style.backgroundColor = "#007aff";
+            }
+        }
+
+        // 판정 터치 이벤트 함수
+        function setJudgment(type) {
+            judgments[currentStep] = type;
+            document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
+            
+            if(type === '패스') document.getElementById('btnPass').classList.add('active');
+            if(type === '요주의') document.getElementById('btnWarn').classList.add('active');
+            if(type === '불합격') {
