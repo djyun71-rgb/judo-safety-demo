@@ -46,9 +46,9 @@
             <div class="guide" id="lblGuide">가이드 내용이 들어갑니다.</div>
             
             <div class="btn-group">
-                <div class="status-btn pass" id="btnPass" onclick="setJudgment('패스')">🟢 패스</div>
-                <div class="status-btn warn" id="btnWarn" onclick="setJudgment('요주의')">🟡 요주의</div>
-                <div class="status-btn fail" id="btnFail" onclick="setJudgment('불합격')">🔴 불합격</div>
+                <div class="status-btn" id="btnPass" onclick="setJudgment('패스')">🟢 패스</div>
+                <div class="status-btn" id="btnWarn" onclick="setJudgment('요주의')">🟡 요주의</div>
+                <div class="status-btn" id="btnFail" onclick="setJudgment('불합격')">🔴 불합격</div>
             </div>
 
             <div class="contact-box">
@@ -66,7 +66,6 @@
     </div>
 
     <script>
-        // 12개 마스터 세부 지표 데이터 구조 선언
         const inspectionItems = [
             { id: 0, cat: "A. 매트(Tatami) 및 바닥 상태", code: "A-1", title: "매트 밀착도 및 틈새 점검", guide: "매트 사이 틈새가 5mm 이상 벌어져 선수 디딤발이나 발가락이 끼일 위험이 없는지 정밀하게 확인하십시오.", contact: "시설 관리팀 - 김관리 (010-1234-5678)" },
             { id: 1, cat: "A. 매트(Tatami) 및 바닥 상태", code: "A-2", title: "매트 표면 마찰력 및 오염도", guide: "표면이 땀이나 마모로 인해 미끄럽지 않은지, 혈흔이나 이물질 없이 위생적으로 소독 청소되었는지 점검하십시오.", contact: "시설 관리팀 - 김관리 (010-1234-5678)" },
@@ -93,20 +92,19 @@
             document.getElementById('lblContact').innerText = item.contact;
             
             const progressPercent = ((currentStep + 1) / 12) * 100;
-            document.getElementById('progressFill').style.width = `${progressPercent}%`;
-            document.getElementById('progressText').innerText = `${currentStep + 1} / 12 항목 진행 중`;
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+            document.getElementById('progressText').innerText = (currentStep + 1) + ' / 12 항목 진행 중';
 
-            // 모든 버튼 상태 초기화
-            document.getElementById('btnPass').classList.remove('active');
-            document.getElementById('btnWarn').classList.remove('active');
-            document.getElementById('btnFail').classList.remove('active');
+            // 클래스 초기화 안전한 방식으로 전면 교체
+            document.getElementById('btnPass').className = 'status-btn';
+            document.getElementById('btnWarn').className = 'status-btn';
+            document.getElementById('btnFail').className = 'status-btn';
             
-            // 기존에 입력된 판정값이 있으면 복원
             const currentJudgment = judgments[currentStep];
-            if(currentJudgment === '패스') document.getElementById('btnPass').classList.add('active');
-            if(currentJudgment === '요주의') document.getElementById('btnWarn').classList.add('active');
+            if(currentJudgment === '패스') document.getElementById('btnPass').className = 'status-btn pass active';
+            if(currentJudgment === '요주의') document.getElementById('btnWarn').className = 'status-btn warn active';
             if(currentJudgment === '불합격') {
-                document.getElementById('btnFail').classList.add('active');
+                document.getElementById('btnFail').className = 'status-btn fail active';
                 document.getElementById('sendBtn').style.display = 'block';
             } else {
                 document.getElementById('sendBtn').style.display = 'none';
@@ -123,7 +121,9 @@
 
         function setJudgment(type) {
             judgments[currentStep] = type;
-            document.getElementById('btnPass').classList.remove('active');
-            document.getElementById('btnWarn').classList.remove('active');
-            document.getElementById('btnFail').classList.remove('active');
             
+            document.getElementById('btnPass').className = 'status-btn';
+            document.getElementById('btnWarn').className = 'status-btn';
+            document.getElementById('btnFail').className = 'status-btn';
+            
+            if(type === '패스') document.getElementById('btnPass').className = 'status-btn pass active';
