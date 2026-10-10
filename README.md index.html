@@ -35,7 +35,7 @@
         <div class="progress-container">
             <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: bold;">
                 <span id="sessionTitle">점검 진행률</span>
-                <span id="progressText" style="color: #007aff;">1/12 항목 완료</span>
+                <span id="progressText" style="color: #007aff;">1 / 12 항목 진행 중</span>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
         </div>
@@ -83,9 +83,8 @@
         ];
 
         let currentStep = 0;
-        let judgments = Array(12).fill(null); // 각 항목 판정 기록 저장용 배열
+        let judgments = Array(12).fill(null);
 
-        // 화면 갱신 렌더러 함수
         function renderStep() {
             const item = inspectionItems[currentStep];
             document.getElementById('lblCategory').innerText = item.cat;
@@ -93,16 +92,19 @@
             document.getElementById('lblGuide').innerText = item.guide;
             document.getElementById('lblContact').innerText = item.contact;
             
-            // 진행률 및 인디케이터 업데이트
             const progressPercent = ((currentStep + 1) / 12) * 100;
             document.getElementById('progressFill').style.width = `${progressPercent}%`;
             document.getElementById('progressText').innerText = `${currentStep + 1} / 12 항목 진행 중`;
 
-            // 이전 판정 버튼 스타일 초기화 및 복원
-            document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
+            // 모든 버튼 상태 초기화
+            document.getElementById('btnPass').classList.remove('active');
+            document.getElementById('btnWarn').classList.remove('active');
+            document.getElementById('btnFail').classList.remove('active');
+            
+            // 기존에 입력된 판정값이 있으면 복원
             const currentJudgment = judgments[currentStep];
-            if(currentJudgment === '패스') document.getElementById('btnPass').add('active');
-            if(currentJudgment === '요주의') document.getElementById('btnWarn').add('active');
+            if(currentJudgment === '패스') document.getElementById('btnPass').classList.add('active');
+            if(currentJudgment === '요주의') document.getElementById('btnWarn').classList.add('active');
             if(currentJudgment === '불합격') {
                 document.getElementById('btnFail').classList.add('active');
                 document.getElementById('sendBtn').style.display = 'block';
@@ -110,7 +112,6 @@
                 document.getElementById('sendBtn').style.display = 'none';
             }
 
-            // 하단 버튼 텍스트 제어 (마지막 문항 처리)
             if(currentStep === 11) {
                 document.getElementById('nextBtn').innerText = "🥇 전체 점검 완료하기";
                 document.getElementById('nextBtn').style.backgroundColor = "#2ecc71";
@@ -120,11 +121,9 @@
             }
         }
 
-        // 판정 터치 이벤트 함수
         function setJudgment(type) {
             judgments[currentStep] = type;
-            document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btnPass').classList.remove('active');
+            document.getElementById('btnWarn').classList.remove('active');
+            document.getElementById('btnFail').classList.remove('active');
             
-            if(type === '패스') document.getElementById('btnPass').classList.add('active');
-            if(type === '요주의') document.getElementById('btnWarn').classList.add('active');
-            if(type === '불합격') {
