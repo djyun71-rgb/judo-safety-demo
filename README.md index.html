@@ -29,9 +29,12 @@
         .guide { color: #515154; font-size: 14px; line-height: 1.5; margin-bottom: 20px; background: #f5f5f7; padding: 12px; border-radius: 8px; border-left: 4px solid #007aff; }
         .btn-group { display: flex; gap: 8px; margin: 20px 0; }
         .status-btn { flex: 1; padding: 14px 0; border-radius: 8px; border: 2px solid #e5e5e7; background: #fff; font-weight: bold; text-align: center; cursor: pointer; font-size: 14px; transition: all 0.2s; }
-        .status-btn.pass.active { background: #2ecc71; color: #fff; border-color: #2ecc71; }
-        .status-btn.warn.active { background: #f1c40f; color: #fff; border-color: #f1c40f; }
-        .status-btn.fail.active { background: #ff3b30; color: #fff; border-color: #ff3b30; }
+        
+        /* 선택 시 색상 강제 지정 */
+        .status-btn.pass-active { background: #2ecc71 !important; color: #fff !important; border-color: #2ecc71 !important; }
+        .status-btn.warn-active { background: #f1c40f !important; color: #fff !important; border-color: #f1c40f !important; }
+        .status-btn.fail-active { background: #ff3b30 !important; color: #fff !important; border-color: #ff3b30 !important; }
+        
         .contact-box { background: #f5f5f7; border: 1px solid #e5e5e7; padding: 12px; border-radius: 8px; font-size: 13px; margin-bottom: 20px; }
         .contact-title { font-size: 11px; color: #86868b; font-weight: bold; margin-bottom: 4px; }
         .action-btn { background: #ff3b30; color: #fff; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; display: none; cursor: pointer; text-align: center; box-shadow: 0 4px 12px rgba(255,59,48,0.2); margin-top: 10px; }
@@ -43,35 +46,35 @@
 </head>
 <body>
     
-    <!-- [뷰 1] 대회 정보 입력 화면 -->
+    <!-- [화면 1] 대회 기본 정보 입력 화면 -->
     <div id="formView" class="container">
         <div class="form-card">
             <div class="form-title">🥋 대회 기본 정보 입력</div>
             <div class="form-group">
                 <label>대회명</label>
-                <input type="text" id="txtCompName" placeholder="예: 제1회 강원도지사배 유도대회" value="제1회 강원도지사배 유도대회">
+                <input type="text" id="txtCompName" value="제1회 강원도지사배 유도대회">
             </div>
             <div class="form-group">
-                <label>일시 (날짜)</label>
+                <label>일시</label>
                 <input type="date" id="txtDate" value="2026-10-10">
             </div>
             <div class="form-group">
                 <label>장소 (체육관명)</label>
-                <input type="text" id="txtLocation" placeholder="예: 춘천 종합체육관 A경기장" value="춘천 종합체육관 A경기장">
+                <input type="text" id="txtLocation" value="춘천 종합체육관 A경기장">
             </div>
             <div class="form-group">
-                <label>참가 인원 (예상 선수 수)</label>
-                <input type="number" id="txtParticipants" placeholder="예: 500" value="500">
+                <label>참가 인원</label>
+                <input type="number" id="txtParticipants" value="500">
             </div>
             <div class="form-group">
                 <label>점검원 이름</label>
-                <input type="text" id="txtInspector" placeholder="예: 홍길동" value="홍길동">
+                <input type="text" id="txtInspector" value="홍길동">
             </div>
             <button class="start-btn" onclick="startInspection()">⚡ 안전 점검 시작하기</button>
         </div>
     </div>
 
-    <!-- [뷰 2] 본 점검 체크리스트 화면 (기존 오류 제거 버전) -->
+    <!-- [화면 2] 본 점검 체크리스트 화면 -->
     <div id="inspectionView">
         <div class="app-bar" id="appBarTitle">📱 경기장 실시간 점검 레포트</div>
         <div class="container">
@@ -84,9 +87,9 @@
             </div>
             
             <div class="card">
-                <div class="category" id="lblCategory">카테고리</div>
-                <div class="item-title" id="lblTitle">지표 타이틀</div>
-                <div class="guide" id="lblGuide">가이드 내용</div>
+                <div class="category" id="lblCategory">A. 매트(Tatami) 및 바닥 상태</div>
+                <div class="item-title" id="lblTitle">A-1. 매트 밀착도 및 틈새 점검</div>
+                <div class="guide" id="lblGuide">매트 사이 틈새가 5mm 이상 벌어져 선수 디딤발이나 발가락이 끼일 위험이 없는지 정밀하게 확인하십시오.</div>
                 
                 <div class="btn-group">
                     <div class="status-btn" id="btnPass" onclick="setJudgment('패스')">🟢 패스</div>
@@ -96,7 +99,7 @@
 
                 <div class="contact-box">
                     <div class="contact-title">📋 소관 부서 및 비상 연락처</div>
-                    <div id="lblContact" style="font-weight: bold; color: #333;">담당자 정보</div>
+                    <div id="lblContact" style="font-weight: bold; color: #333;">시설 관리팀 - 김관리 (010-1234-5678)</div>
                 </div>
                 
                 <button class="action-btn" id="sendBtn" onclick="triggerAlert()">⚡ 즉시 개선 요청 발송</button>
@@ -110,6 +113,7 @@
     </div>
 
     <script>
+        // 12개 고정 데이터 배열
         const inspectionItems = [
             { id: 0, cat: "A. 매트(Tatami) 및 바닥 상태", code: "A-1", title: "매트 밀착도 및 틈새 점검", guide: "매트 사이 틈새가 5mm 이상 벌어져 선수 디딤발이나 발가락이 끼일 위험이 없는지 정밀하게 확인하십시오.", contact: "시설 관리팀 - 김관리 (010-1234-5678)" },
             { id: 1, cat: "A. 매트(Tatami) 및 바닥 상태", code: "A-2", title: "매트 표면 마찰력 및 오염도", guide: "표면이 땀이나 마모로 인해 미끄럽지 않은지, 혈흔이나 이물질 없이 위생적으로 소독 청소되었는지 점검하십시오.", contact: "시설 관리팀 - 김관리 (010-1234-5678)" },
@@ -122,6 +126,3 @@
             { id: 8, cat: "C. 주변 시설 및 환경 안전 대책", code: "C-1", title: "벽면 및 기둥 충격보호대 상태", guide: "경기장 가장자리에 위치한 체육관 콘크리트 벽면 및 기둥 부위에 높이 1.8m 이상의 충격 흡수 매트 패딩이 견고히 감싸져 있는지 확인하십시오.", contact: "체육관 대관담당 - 시설계 (033-123-4567)" },
             { id: 9, cat: "C. 주변 시설 및 환경 안전 대책", code: "C-2", title: "선수 및 관중 동선 차단펜스", guide: "흥분한 관중이나 외부인이 선수 대기 구역 및 매트에 난입하지 못하도록 안전 차단 펜스 및 안전 요원이 정위치에 배치되었는지 확인하십시오.", contact: "대회 운영본부 - 안전관제 (010-1111-2222)" },
             { id: 10, cat: "C. 주변 시설 및 환경 안전 대책", code: "C-3", title: "조명 균일도 및 환기 성능", guide: "선수의 순간 시야를 방해하는 상부 직접 투광 조명의 눈부심(글레어) 현상이 없는지 및 실내 탁도를 쾌적하게 유지하는지 확인하십시오.", contact: "체육관 대관담당 - 전기계 (033-123-4568)" },
-            { id: 11, cat: "C. 주변 시설 및 환경 안전 대책", code: "C-4", title: "응급 구역 및 앰뷸런스 동선", guide: "부상자 발생 시 즉각 응급 처치가 가능한 의료진 부스 및 구급차가 장애물 없이 외부 도로로 출동할 수 있는 탈출로가 확보되었는지 확인하십시오.", contact: "현장 의료 지원팀 - 구급반 (010-5555-6666)" }
-        ];
-
